@@ -1,6 +1,6 @@
-# vim:fileencoding=utf-8:foldmethod=marker
+# vim:fileencoding=utf-8:foldmethod=marker:foldmarker=<<<,>>>:ft=conf
 
-#: Fonts {{{
+#: Fonts <<<
 
 #: kitty has very powerful font management. You can configure
 #: individual font faces and even specify special fonts for particular
@@ -263,9 +263,9 @@
 #: of the problem or consider using the ratio mode of operation
 #: described above instead of the % mode of operation.
 
-#: }}}
+#: >>>
 
-#: Text cursor customization {{{
+#: Text cursor customization <<<
 
 # cursor #cccccc
 
@@ -383,9 +383,9 @@
 #: the appearance of the cursor trail independently of the cursor
 #: color.
 
-#: }}}
+#: >>>
 
-#: Scrollback {{{
+#: Scrollback <<<
 
 # scrollback_lines 2000
 
@@ -550,9 +550,9 @@
 #: platforms such as macOS and Wayland. Use negative numbers to change
 #: scroll direction.
 
-#: }}}
+#: >>>
 
-#: Mouse {{{
+#: Mouse <<<
 
 # mouse_hide_wait 3.0
 
@@ -760,7 +760,7 @@
 #: The optional second value sets the shape when dragging in
 #: rectangular selection mode.
 
-#: Mouse actions {{{
+#: Mouse actions <<<
 
 #: Mouse buttons can be mapped to perform arbitrary actions. The
 #: syntax is:
@@ -916,11 +916,11 @@
 #::  Requires shell integration
 #::  <https://sw.kovidgoyal.net/kitty/shell-integration/> to work.
 
-#: }}}
+#: >>>
 
-#: }}}
+#: >>>
 
-#: Performance tuning {{{
+#: Performance tuning <<<
 
 # repaint_delay 10
 
@@ -950,9 +950,9 @@
 #: monitor. With a very high speed mouse/high keyboard repeat rate,
 #: you may notice some slight input latency. If so, set this to no.
 
-#: }}}
+#: >>>
 
-#: Terminal bell {{{
+#: Terminal bell <<<
 
 # enable_audio_bell yes
 
@@ -1033,9 +1033,9 @@
 #: theme name. Now all compliant applications should use sounds from
 #: this theme.
 
-#: }}}
+#: >>>
 
-#: Window layout {{{
+#: Window layout <<<
 
 # remember_window_size  yes
 # initial_window_width  640
@@ -1254,9 +1254,9 @@
 #: want confirmation when closing individual windows, you can map the
 #: close_window_with_confirmation action.
 
-#: }}}
+#: >>>
 
-#: Tab bar {{{
+#: Tab bar <<<
 
 # tab_bar_edge bottom
 
@@ -1453,12 +1453,18 @@
 #: margins the default color is chosen to match the background color
 #: of the neighboring tab.
 
-#: }}}
+#: >>>
 
-#: Color scheme {{{
+#: Color scheme <<<
 
 # foreground #dddddd
 # background #000000
+{{- if eq .chezmoi.os "linux" }}
+{{-   if eq .chezmoi.osRelease.id "ubuntu" }}
+# Ubuntu Aubergine
+background #300a24
+{{-   end }}
+{{- end }}
 
 #: The foreground and background colors.
 
@@ -1597,7 +1603,7 @@ background_opacity 0.8
 #: to be used unchanged. Note that these colors can be overridden by
 #: the program running in the terminal.
 
-#: The color table {{{
+#: The color table <<<
 
 #: The 256 terminal colors. There are 8 basic colors, each color has a
 #: dull and bright version, for the first 16 colors. You can set the
@@ -1667,13 +1673,16 @@ background_opacity 0.8
 
 #: Color for marks of type 3 (violet)
 
-#: }}}
+#: >>>
 
-#: }}}
+#: >>>
 
-#: Advanced {{{
+#: Advanced <<<
 
 # shell .
+{{- if hasKey . "override_shell" }}
+shell {{ .override_shell }}
+{{- end }}
 
 #: The shell program to execute. The default value of . means to use
 #: the value of of the SHELL environment variable or if unset,
@@ -2078,9 +2087,9 @@ background_opacity 0.8
 #: an "Actions" menu in the macOS global menubar. Sub-menus can be
 #: created by adding more levels separated by the :: characters.
 
-#: }}}
+#: >>>
 
-#: OS specific tweaks {{{
+#: OS specific tweaks <<<
 
 # wayland_titlebar_color system
 
@@ -2196,9 +2205,9 @@ background_opacity 0.8
 #: Changing this option by reloading the config is not supported, it
 #: will not have any effect.
 
-#: }}}
+#: >>>
 
-#: Keyboard shortcuts {{{
+#: Keyboard shortcuts <<<
 
 #: Keys are identified simply by their lowercase Unicode characters.
 #: For example: a for the A key, [ for the left square bracket key,
@@ -2264,7 +2273,7 @@ background_opacity 0.8
 #: cause all invocations of the hints kitten to have the --hints-
 #: offset=0 option applied.
 
-#: Clipboard {{{
+#: Clipboard <<<
 
 #: Copy to clipboard
 
@@ -2281,6 +2290,9 @@ background_opacity 0.8
 
 #: Copy to clipboard or pass through
 
+{{- if ne .chezmoi.os "darwin" }}
+map ctrl+c copy_and_clear_or_interrupt
+{{- end }}
 # map cmd+c copy_or_noop
 
 #: Paste from clipboard
@@ -2310,9 +2322,9 @@ background_opacity 0.8
 
 #::      map kitty_mod+y new_window less @selection
 
-#: }}}
+#: >>>
 
-#: Scrolling {{{
+#: Scrolling <<<
 
 #: Scroll line up
 
@@ -2418,9 +2430,9 @@ background_opacity 0.8
 #::  For more sophisticated control, such as using the current
 #::  selection, use remote_control_script.
 
-#: }}}
+#: >>>
 
-#: Window management {{{
+#: Window management <<<
 
 #: New window
 
@@ -2557,9 +2569,9 @@ background_opacity 0.8
 
 #::  Works like focus_visible_window above, but swaps the window.
 
-#: }}}
+#: >>>
 
-#: Tab management {{{
+#: Tab management <<<
 
 #: Next tab
 
@@ -2617,9 +2629,9 @@ background_opacity 0.8
 #: rather than at the end of the tabs list, use::
 
 #:     map ctrl+t new_tab !neighbor [optional cmd to run]
-#: }}}
+#: >>>
 
-#: Layout management {{{
+#: Layout management <<<
 
 #: Next layout
 
@@ -2641,9 +2653,9 @@ background_opacity 0.8
 #: stack layout::
 
 #:     map ctrl+alt+z toggle_layout stack
-#: }}}
+#: >>>
 
-#: Font sizes {{{
+#: Font sizes <<<
 
 #: You can change the font size for all top-level kitty OS windows at
 #: a time or only the current one.
@@ -2683,9 +2695,9 @@ background_opacity 0.8
 
 #:     map kitty_mod+f6 change_font_size all *2.0
 #:     map kitty_mod+f6 change_font_size all /2.0
-#: }}}
+#: >>>
 
-#: Select and act on visible text {{{
+#: Select and act on visible text <<<
 
 #: Use the hints kitten to select text and either pass it to an
 #: external program or insert it into the terminal or copy it to the
@@ -2767,9 +2779,9 @@ background_opacity 0.8
 #: The hints kitten has many more modes of operation that you can map
 #: to different shortcuts. For a full description see hints kitten
 #: <https://sw.kovidgoyal.net/kitty/kittens/hints/>.
-#: }}}
+#: >>>
 
-#: Miscellaneous {{{
+#: Miscellaneous <<<
 
 #: Show documentation
 
@@ -2987,6 +2999,6 @@ background_opacity 0.8
 
 # map cmd+q quit
 
-#: }}}
+#: >>>
 
-#: }}}
+#: >>>
