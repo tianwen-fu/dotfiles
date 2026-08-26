@@ -76,25 +76,49 @@ set -g status-right-length 60
 set -g status-style              "bg=#1f2335,fg=#a9b1d6"
 set -g message-style             "bg=#292e42,fg=#c0caf5"
 
-# Session name, as a solid block on the left.
-set -g status-left "#[fg=#{@bg},bg=#{@blue},bold] #S #[fg=#{@blue},bg=#{@bg},none] "
+# Separators. The powerline glyphs live in the Unicode Private Use Area and
+# only exist in patched fonts, so they are gated on the same data key that
+# sets kitty's font. Without that key they fall back to empty strings and the
+# bar renders as plain colour blocks -- correct, just less fancy.
+#
+# Measured in this tmux: U+E0B0 and U+E0B2 are width 1, which is what patched
+# fonts draw, so the bar stays aligned. That agreement is the whole reason
+# these are safe where arbitrary emoji are not.
+{{- if hasKey . "powerline_font" }}
+set -g @sep_r ""
+set -g @sep_l ""
+{{- else }}
+set -g @sep_r ""
+set -g @sep_l ""
+{{- end }}
 
-# Windows. Current one is a filled block; the rest are dim text.
+# Session name on the left. It turns orange while the prefix key is pending,
+# so you can see tmux waiting for the second key of a chord -- worth having
+# over SSH, where a dropped prefix otherwise shows up as the *next* key doing
+# something baffling.
+#
+# NB: #[fg=x,bg=y] must not appear inside #{?...}: the comma would split the
+# conditional's branches. Hence the separate single-attribute styles.
+set -g status-left "#{?client_prefix,#[bg=#{@orange}],#[bg=#{@blue}]}#[fg=#{@bg}]#[bold] #S #[none]#{?client_prefix,#[fg=#{@orange}],#[fg=#{@blue}]}#[bg=#{@bg}]#{@sep_r} "
+
 set -g window-status-separator ""
 
-# Inactive window. Activity brightens the label from dim to normal fg and
-# adds an orange dot; a bell adds a red bang. Note these are done inline
-# rather than via window-status-activity-style, because the #[fg=] at the
-# start of this format would override that option anyway.
+# Inactive window. Activity brightens the label from dim to normal fg and adds
+# an orange *; a bell adds a bell emoji. Done inline rather than via
+# window-status-activity-style, because the #[fg=] opening this format would
+# override that option anyway.
 #
-# Commas separate the branches of #{?...}, so only single-attribute styles
-# like #[fg=x] may appear inside one -- #[fg=x,bold] would split wrongly.
-set -g window-status-format "#{?window_activity_flag,#[fg=#{@fg}],#[fg=#{@dim}]} #I #W#{?window_zoomed_flag, +,}#{?window_activity_flag, #[fg=#{@orange}]*,}#{?window_bell_flag, #[fg=#{@red}]!,} "
+# Markers are chosen for width agreement. * is width 1. U+1F514 is East Asian
+# Wide, which tmux and the terminal both count as 2. Glyphs needing a
+# variation selector (U+FE0F) are deliberately avoided: tmux ignores VS16 and
+# counts them 1 while the terminal draws 2, which shifts the whole bar.
+set -g window-status-format "#{?window_activity_flag,#[fg=#{@fg}],#[fg=#{@dim}]} #I #W#{?window_zoomed_flag, +,}#{?window_activity_flag, #[fg=#{@orange}]*,}#{?window_bell_flag, 🔔,} "
 
-set -g window-status-current-format "#[fg=#{@bg},bg=#{@purple},bold] #I #W#{?window_zoomed_flag, +,} "
+# Current window: a filled block, wrapped in separators where available.
+set -g window-status-current-format "#[fg=#{@purple}]#[bg=#{@bg}]#{@sep_l}#[fg=#{@bg}]#[bg=#{@purple}]#[bold] #I #W#{?window_zoomed_flag, +,}#[none]#[fg=#{@purple}]#[bg=#{@bg}]#{@sep_r}"
 
 # Host on the right -- worth showing when you are on a remote workstation.
-set -g status-right "#[fg=#{@dim}]#h #[fg=#{@bg_hl}]| #[fg=#{@cyan}]%H:%M "
+set -g status-right "#[fg=#{@bg_hl}]#[bg=#{@bg}]#{@sep_l}#[fg=#{@dim}]#[bg=#{@bg_hl}] #h #[fg=#{@cyan}]%H:%M "
 
 
 # --------------------------------------------------------------------------
