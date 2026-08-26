@@ -44,6 +44,30 @@ set  -g renumber-windows on   # close a middle window and the rest close ranks,
 
 
 # ==========================================================================
+# Mouse
+# ==========================================================================
+# Clicking a window in the status bar to switch to it needs no plugin and no
+# custom binding: tmux has bound MouseDown1Status to `select-window -t =` for
+# years. The only thing missing is that `mouse` itself defaults to off.
+#
+# Turning it on also activates the other built-in bindings, all default:
+#   left click on a tab      select that window
+#   right click on a tab     window menu (swap / rename / kill / new)
+#   right click on the left  session menu (next / prev / rename / new)
+#   wheel over the bar       previous / next window
+#   click a pane             select it
+#   drag a pane border       resize
+#   double / triple click    select word / line and copy
+#
+# The trade-off: tmux now grabs the mouse, so dragging inside a pane enters
+# copy-mode and copies to a tmux buffer instead of making a terminal-level
+# selection. In kitty, hold Shift to bypass the grab and get kitty's own
+# selection back (its default mouse_map binds shift+left to mouse_selection
+# for grabbed programs, and shift+middle to paste primary).
+set -g mouse on
+
+
+# ==========================================================================
 # Status bar
 # ==========================================================================
 # tokyonight (storm) palette -- same colours as the nvim colourscheme, so the
