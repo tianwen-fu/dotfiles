@@ -142,10 +142,20 @@ set -g status-left "#{?client_prefix,#[bg=#{@orange}],#[bg=#{@blue}]}#[fg=#{@bg}
 set -g window-status-separator ""
 
 # Inactive window. Activity brightens the label from dim to normal fg and adds
-# an orange *; a bell adds a bell emoji. Done inline rather than via
-# window-status-activity-style, because the #[fg=] opening this format would
-# override that option anyway.
+# an orange *; a bell adds a bell emoji. Both are done inline in the format.
 #
+# The two style options below MUST be set. tmux defaults both of them to
+# "reverse", which swaps fg and bg for the whole entry -- that is what wrapped
+# the label in a grey box and gave the * an orange background. reverse is an
+# attribute, not a colour, so the #[fg=] opening this format does not clear it;
+# only overriding the option does.
+#
+# Verified by capturing the status draw: unset, tmux emits SGR 7 twice; set to
+# none, it emits none. Keep the filled block exclusive to the current window,
+# so which window is current stays a difference of shape, not just colour.
+set -g window-status-activity-style "none"
+set -g window-status-bell-style     "none"
+
 # Markers are chosen for width agreement. * is width 1. U+1F514 is East Asian
 # Wide, which tmux and the terminal both count as 2. Glyphs needing a
 # variation selector (U+FE0F) are deliberately avoided: tmux ignores VS16 and
