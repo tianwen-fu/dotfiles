@@ -9,7 +9,7 @@
 
 environment {
     XMODIFIERS "@im=fcitx"
-	QT_IM_MODULE "fcitx"
+	  QT_IM_MODULE "fcitx"
     // GTK_IM_MODULE "fcitx"
 }
 
@@ -60,8 +60,8 @@ input {
     trackpoint {
         // off
         // natural-scroll
-        accel-speed 0.4
-        // accel-profile "flat"
+        accel-speed 0.5
+        accel-profile "flat"
         // scroll-method "on-button-down"
         // scroll-button 273
         // scroll-button-lock
@@ -281,7 +281,7 @@ layout {
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
 spawn-at-startup "qs" "-c" "noctalia-shell"
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
-spawn-at-startup "fcitx5"
+spawn-at-startup "fcitx5" "-d"
 
 hotkey-overlay {
     // Uncomment this line to disable the "Important Hotkeys" pop-up at startup.
