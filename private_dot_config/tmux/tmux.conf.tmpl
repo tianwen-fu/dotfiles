@@ -33,6 +33,20 @@ set-option -g default-shell {{ .override_shell }}
 set  -g default-terminal "tmux-256color"
 set -as terminal-features ",xterm-kitty:RGB"
 
+# Pass terminal focus in/out events (CSI I / CSI O) through to programs in
+# panes. Off by default, which silently breaks anything relying on them.
+#
+# The consumer here is nvim: LazyVim binds FocusGained to :checktime (see
+# lazyvim/config/autocmds.lua), which is what reloads a buffer after the file
+# changed on disk. Inside tmux without this, that autocmd simply never fires.
+#
+# Not machine-specific, so it belongs in the synced config rather than behind
+# a data key: it asks for a behaviour, and tmux only requests focus reporting
+# from terminals that support it, so it is inert elsewhere rather than wrong.
+#
+# Changing this needs attached clients to detach and reattach to take effect.
+set -g focus-events on
+
 
 # ==========================================================================
 # Window & pane numbering
