@@ -1,0 +1,34 @@
+# ~/.config/tmux/tmux.conf
+#
+# MANAGED BY CHEZMOI -- edits here are overwritten by `chezmoi apply`.
+# Source: private_dot_config/tmux/tmux.conf.tmpl
+#
+# Machine-local settings do not belong in this file. Two escape hatches:
+#   1. A single value that differs per machine -> add a key under [data] in
+#      ~/.config/chezmoi/chezmoi.toml and guard it with `hasKey` (see below).
+#   2. Freeform local commands -> ~/.config/tmux/local.conf, sourced last.
+#
+# tmux reads config once, when the server creates its first session. After
+# changing this file: `tmux source-file ~/.config/tmux/tmux.conf`, or restart
+# the server entirely if you changed something servers cache (default-shell).
+
+{{- if hasKey . "override_shell" }}
+
+# This workstation authenticates against a university account, so the passwd
+# shell cannot be changed locally. Point tmux at the shell we actually want.
+# default-command is left empty, which makes tmux start this as a LOGIN shell
+# (-> .zprofile, then .zshrc). Value: [data].override_shell in the local,
+# unsynced ~/.config/chezmoi/chezmoi.toml. Absent on a machine -> line is not
+# emitted and tmux falls back to the passwd shell.
+set-option -g default-shell {{ .override_shell }}
+{{- end }}
+
+
+# --------------------------------------------------------------------------
+# Machine-local overrides.
+#
+# Keep this LAST: tmux applies config top to bottom, so anything sourced here
+# wins over the settings above. -q means no error when the file is absent, so
+# machines without a local.conf are fine.
+# --------------------------------------------------------------------------
+source-file -q ~/.config/tmux/local.conf

@@ -1,0 +1,6 @@
+# Paths listed here are relative to the target dir ($HOME) and are never
+# managed by chezmoi -- not applied, and not picked up by `chezmoi add`.
+
+# Machine-local tmux overrides, sourced from the end of tmux.conf.
+# Intentionally unsynced: holds per-workstation settings only.
+.config/tmux/local.conf
