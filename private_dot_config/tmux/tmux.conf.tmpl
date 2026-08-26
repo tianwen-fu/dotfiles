@@ -24,6 +24,65 @@ set-option -g default-shell {{ .override_shell }}
 {{- end }}
 
 
+
+# ==========================================================================
+# Terminal capabilities
+# ==========================================================================
+# tmux-256color carries the right terminfo; RGB advertises 24-bit colour so
+# the hex values below render exactly rather than being quantised to 256.
+set  -g default-terminal "tmux-256color"
+set -as terminal-features ",xterm-kitty:RGB"
+
+
+# ==========================================================================
+# Window & pane numbering
+# ==========================================================================
+set  -g base-index 1          # windows count from 1 -- matches the keyboard
+setw -g pane-base-index 1     # keep panes consistent with windows
+set  -g renumber-windows on   # close a middle window and the rest close ranks,
+                              # so numbering never grows holes
+
+
+# ==========================================================================
+# Status bar
+# ==========================================================================
+# tokyonight (storm) palette -- same colours as the nvim colourscheme, so the
+# bar sits under an nvim pane without clashing. Retheme by editing only here.
+set -g @bg      "#1f2335"
+set -g @bg_hl   "#292e42"
+set -g @fg      "#c0caf5"
+set -g @dim     "#565f89"
+set -g @blue    "#7aa2f7"
+set -g @cyan    "#7dcfff"
+set -g @purple  "#bb9af7"
+set -g @orange  "#ff9e64"
+
+set -g status on
+set -g status-position bottom
+set -g status-justify left
+set -g status-interval 5
+set -g status-left-length 40
+set -g status-right-length 60
+
+# Style options take literal colours: format expansion is not guaranteed here,
+# unlike the status-* strings below where #{@var} is reliable.
+set -g status-style              "bg=#1f2335,fg=#a9b1d6"
+set -g window-status-activity-style "fg=#ff9e64,none"
+set -g window-status-bell-style     "fg=#f7768e,bold"
+set -g message-style             "bg=#292e42,fg=#c0caf5"
+
+# Session name, as a solid block on the left.
+set -g status-left "#[fg=#{@bg},bg=#{@blue},bold] #S #[fg=#{@blue},bg=#{@bg},none] "
+
+# Windows. Current one is a filled block; the rest are dim text.
+set -g window-status-separator ""
+set -g window-status-format         "#[fg=#{@dim}] #I #W#{?window_zoomed_flag, +,} "
+set -g window-status-current-format "#[fg=#{@bg},bg=#{@purple},bold] #I #W#{?window_zoomed_flag, +,} "
+
+# Host on the right -- worth showing when you are on a remote workstation.
+set -g status-right "#[fg=#{@dim}]#h #[fg=#{@bg_hl}]| #[fg=#{@cyan}]%H:%M "
+
+
 # --------------------------------------------------------------------------
 # Machine-local overrides.
 #
