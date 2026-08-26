@@ -2,8 +2,11 @@ set number
 set relativenumber
 set shiftwidth=4
 set tabstop=4
+set smarttab
 set laststatus=2
+filetype plugin indent on
 syntax on
 set incsearch
 set hlsearch
-
+set modeline
+set foldenable
