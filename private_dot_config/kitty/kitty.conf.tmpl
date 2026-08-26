@@ -7,6 +7,15 @@
 #: characters.
 
 # font_family      monospace
+{{- if hasKey . "powerline_font" }}
+
+# Patched font carrying the Private Use Area glyphs that the tmux status bar
+# uses for its separators. Set per-machine as [data].powerline_font in the
+# local, unsynced ~/.config/chezmoi/chezmoi.toml, because the font is not
+# guaranteed to be installed everywhere this repo lands. Without the key,
+# kitty keeps its default and the tmux bar falls back to plain blocks.
+font_family {{ .powerline_font }}
+{{- end }}
 # bold_font        auto
 # italic_font      auto
 # bold_italic_font auto
