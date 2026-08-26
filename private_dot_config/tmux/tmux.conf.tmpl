@@ -56,6 +56,13 @@ set -g @blue    "#7aa2f7"
 set -g @cyan    "#7dcfff"
 set -g @purple  "#bb9af7"
 set -g @orange  "#ff9e64"
+set -g @red     "#f7768e"
+
+# Activity flags are OFF by default -- without this the flag never sets and
+# any activity styling is dead code. visual-activity stays off so activity
+# shows only in the bar, rather than interrupting with a status message.
+setw -g monitor-activity on
+set  -g visual-activity  off
 
 set -g status on
 set -g status-position bottom
@@ -67,8 +74,6 @@ set -g status-right-length 60
 # Style options take literal colours: format expansion is not guaranteed here,
 # unlike the status-* strings below where #{@var} is reliable.
 set -g status-style              "bg=#1f2335,fg=#a9b1d6"
-set -g window-status-activity-style "fg=#ff9e64,none"
-set -g window-status-bell-style     "fg=#f7768e,bold"
 set -g message-style             "bg=#292e42,fg=#c0caf5"
 
 # Session name, as a solid block on the left.
@@ -76,7 +81,16 @@ set -g status-left "#[fg=#{@bg},bg=#{@blue},bold] #S #[fg=#{@blue},bg=#{@bg},non
 
 # Windows. Current one is a filled block; the rest are dim text.
 set -g window-status-separator ""
-set -g window-status-format         "#[fg=#{@dim}] #I #W#{?window_zoomed_flag, +,} "
+
+# Inactive window. Activity brightens the label from dim to normal fg and
+# adds an orange dot; a bell adds a red bang. Note these are done inline
+# rather than via window-status-activity-style, because the #[fg=] at the
+# start of this format would override that option anyway.
+#
+# Commas separate the branches of #{?...}, so only single-attribute styles
+# like #[fg=x] may appear inside one -- #[fg=x,bold] would split wrongly.
+set -g window-status-format "#{?window_activity_flag,#[fg=#{@fg}],#[fg=#{@dim}]} #I #W#{?window_zoomed_flag, +,}#{?window_activity_flag, #[fg=#{@orange}]*,}#{?window_bell_flag, #[fg=#{@red}]!,} "
+
 set -g window-status-current-format "#[fg=#{@bg},bg=#{@purple},bold] #I #W#{?window_zoomed_flag, +,} "
 
 # Host on the right -- worth showing when you are on a remote workstation.
