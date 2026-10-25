@@ -1,0 +1,17 @@
+[Unit]
+PartOf=graphical-session.target
+After=graphical-session.target
+Requisite=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/swayidle -w \
+timeout 300 'niri msg action power-off-monitors' \
+timeout 301 'noctalia msg session lock' \
+timeout 600 'noctalia msg session lock-and-suspend' \
+timeout 601 'systemctl suspend-then-hibernate' \
+before-sleep 'noctalia msg session lock'
+Restart=on-failure
+
+[Install]
+WantedBy=niri.service
