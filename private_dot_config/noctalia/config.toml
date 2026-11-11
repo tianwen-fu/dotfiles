@@ -7,3 +7,4 @@ interval_seconds = 600
 
 [bar.default]
 margin_ends = 25
+start = [ "launcher", "sysmon", "workspaces" ]
